@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.OleDb
 Public Class Form1
     Private Structure importvalues
@@ -51,13 +51,10 @@ Public Class Form1
         Try
             Dim SQLReader As OleDbDataReader
             Dim connection_type As String = "provider = Microsoft.Jet.OLEDB.4.0;"
-            Dim file_location As String = " data source = D:\Assignment DB.mdb"
+            Dim file_location As String = " data source = P:\ConnorComputingAssignment\Assignment\Project Redo\Project Redo\Assignment DB.mdb"
             Dim conn As OleDbConnection
             conn = New OleDbConnection(connection_type & file_location)
             conn.Open()
-
-
-
 
             Dim query2 As String = "insert into [Assignment DB](Name_,Score) values('" & name & "', '" & points & "');"
             Dim command2 As New OleDbCommand(query2, conn)
@@ -69,14 +66,7 @@ Public Class Form1
             TextBox1.Text = ex.Message
         End Try
 
-
-
-
-
-
         Printresults()
-
-
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
@@ -120,13 +110,10 @@ Public Class Form1
         Try
             Dim SQLReader As OleDbDataReader
             Dim connection_type As String = "provider = Microsoft.Jet.OLEDB.4.0;"
-            Dim file_location As String = " data source = D:\Assignment DB.mdb"
+            Dim file_location As String = " data source = P:\ConnorComputingAssignment\Assignment\Project Redo\Project Redo\Assignment DB.mdb"
             Dim conn As OleDbConnection
             conn = New OleDbConnection(connection_type & file_location)
             conn.Open()
-
-
-
 
             Dim query2 As String = "insert into [Assignment DB](Name_,Score) values('" & name & "', '" & points & "');"
             Dim command2 As New OleDbCommand(query2, conn)
@@ -141,13 +128,6 @@ Public Class Form1
         Printresults()
 
     End Sub
-
-
-
-
-
-
-
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
 
@@ -191,13 +171,10 @@ Public Class Form1
         Try
             Dim SQLReader As OleDbDataReader
             Dim connection_type As String = "provider = Microsoft.Jet.OLEDB.4.0;"
-            Dim file_location As String = " data source = D:\Assignment DB.mdb"
+            Dim file_location As String = " data source = P:\ConnorComputingAssignment\Assignment\Project Redo\Project Redo\Assignment DB.mdb"
             Dim conn As OleDbConnection
             conn = New OleDbConnection(connection_type & file_location)
             conn.Open()
-
-
-
 
             Dim query2 As String = "insert into [Assignment DB](Name_,Score) values('" & name & "', '" & points & "');"
             Dim command2 As New OleDbCommand(query2, conn)
@@ -218,7 +195,7 @@ Public Class Form1
         Try
             Dim SQLReader As OleDbDataReader
             Dim connection_type As String = "provider = Microsoft.Jet.OLEDB.4.0;"
-            Dim file_location As String = " data source = D:\Assignment DB.mdb"
+            Dim file_location As String = "  data source = P:\ConnorComputingAssignment\Assignment\Project Redo\Project Redo\Assignment DB.mdb"
             Dim conn As OleDbConnection
             conn = New OleDbConnection(connection_type & file_location)
             conn.Open()
@@ -249,20 +226,33 @@ Public Class Form1
         Try
             Dim SQLReader As OleDbDataReader
             Dim connection_type As String = "provider = Microsoft.Jet.OLEDB.4.0;"
-            Dim file_location As String = " data source = D:\Assignment DB.mdb"
+            Dim file_location As String = " data source = P:\ConnorComputingAssignment\Assignment\Project Redo\Project Redo\Assignment DB.mdb"
             Dim conn As OleDbConnection
             conn = New OleDbConnection(connection_type & file_location)
             conn.Open()
 
+            Dim noOfRes As Integer
+            Dim query2 As String = "select count(*) as [NumberOfRes] from [Assignment DB];"
+            Dim command2 As New OleDbCommand(query2, conn)
+            SQLReader = command2.ExecuteReader()
+            If SQLReader.HasRows Then
+                While SQLReader.Read
+                    noOfRes = SQLReader("NumberOfRes")
+                    MsgBox(Str(noOfRes))
+                End While
+            End If
 
-            Dim query1 As String = "select * from [Assignment DB]"
+            Dim index As Integer = 0
+            Dim query1 As String = "select * from [Assignment DB];"
             Dim command1 As New OleDbCommand(query1, conn)
             SQLReader = command1.ExecuteReader()
 
             If SQLReader.HasRows Then
                 While SQLReader.Read
 
-                    leaderboard(SQLReader.HasRows).name_ = SQLReader("Name_") + leaderboard(SQLReader.HasRows) = SQLReader("Score")
+                    leaderboard(index).name_ = SQLReader("Name_")
+                    leaderboard(index).score = SQLReader("Score")
+                    index += 1
 
                 End While
 
@@ -279,44 +269,38 @@ Public Class Form1
     Private Sub searchforvalue()
         Dim target As String
         target = InputBox("please insert the name of the person you are looking for")
-        For counter = 0 To leaderboard.Length
+        For counter = 0 To leaderboard.Length - 1
             If leaderboard(counter).name_ = target Then
                 TextBox1.Text = TextBox1.Text + leaderboard(counter).name_ + "achieved the score of " + leaderboard(counter).score
-
-
             End If
         Next
     End Sub
 
     Private Sub sortlist()
 
-        Dim inner As Integer
         Dim n As Integer
         Dim swapped As Boolean
-        n = leaderboard.Length
+        n = leaderboard.Length - 1
         Do
             swapped = False
-            For inner = 0 To n - 1
-                If leaderboard(inner).score > leaderboard(inner + 1).score Then
-                    swap(leaderboard(inner).score, leaderboard(inner + 1).score)
+            For inner = 1 To n
+                If leaderboard(inner - 1).score < leaderboard(inner).score Then
+                    swap(leaderboard(inner - 1), leaderboard(inner))
                     swapped = True
                 End If
             Next
-            n = n - 1
         Loop Until swapped = False
 
-        For counter = 0 To leaderboard.Length
-            TextBox1.Text = TextBox1.Text + leaderboard(counter).name_ + leaderboard(counter).score + vbNewLine
+        For counter = 0 To leaderboard.Length - 1
+            TextBox1.Text = TextBox1.Text + leaderboard(counter).name_ + Str(leaderboard(counter).score) + vbNewLine
         Next
 
     End Sub
 
-    Private Sub swap(ByRef first As Object, ByRef second As Object)
-        Dim temp As Integer
+    Private Sub swap(ByRef first As importvalues, ByRef second As importvalues)
+        Dim temp As importvalues
         temp = first
         first = second
         second = temp
-        swaps += 1
     End Sub
-
 End Class
