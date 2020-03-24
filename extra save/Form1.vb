@@ -276,16 +276,20 @@ Public Class Form1
         searchforvalue()
     End Sub
 
-    Private Sub searchforvalue()
+   Private Sub searchforvalue()
         Dim target As String
-        target = InputBox("please insert the name of the person you are looking for")
-        For counter = 0 To leaderboard.Length
-            If leaderboard(counter).name_ = target Then
-                TextBox1.Text = TextBox1.Text + leaderboard(counter).name_ + "achieved the score of " + leaderboard(counter).score
-
-
+        Dim found As Boolean = False
+        Dim UpperIndex As Integer = leaderboard.Length - 1
+        Dim CurrentIndex As Integer = 0
+        target = InputBox("Please enter the name of the person you are looking for: ")
+        Do
+            If leaderboard(CurrentIndex).name_ = target Then
+                found = True
+                MsgBox("found")
+            Else
+                CurrentIndex += 1
             End If
-        Next
+        Loop Until found = True Or CurrentIndex = UpperIndex
     End Sub
 
     Private Sub sortlist()
